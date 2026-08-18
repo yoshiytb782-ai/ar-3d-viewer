@@ -1,84 +1,69 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>MindAR QR AR</title>
 
-  <title>3D AR Viewer</title>
+  aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-  <!-- model-viewer本体の読み込み -->
-  https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.jsscript>
+  https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #f5f5f5;
-      text-align: center;
+      overflow: hidden;
     }
 
-    header {
-      padding: 16px;
-      background: #222;
-      color: white;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .viewer-area {
-      position: relative;
-      width: 100%;
-      height: 70vh;
-      background: #ffffff;
-    }
-
-    model-viewer {
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-    }
-
-    .ar-button {
-      background-color: #1976d2;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: bold;
+    #msg {
       position: absolute;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .ar-button:active {
-      background-color: #0d47a1;
-    }
-
-    .note {
-      padding: 16px;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .small {
-      font-size: 14px;
-      color: #555;
+      z-index: 100;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 0 5px black;
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>3D AR Viewer</h1>
-  </header>
 
-  <div class="viewer-area">
-    <model-viewer
-      src="models
+<div id="msg">
+QRコードにカメラを向けてください
+</div>
+
+<a-scene
+  mindar-image="imageTargetSrc: targets.mind;"
+  color-space="sRGB"
+  renderer="colorManagement: true; physicallyCorrectLights"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+  embedded>
+
+  <a-assets>
+
+    <a-asset-item
+      id="model"
+      src="stamp05.glb">
+    </a-asset-item>
+
+  </a-assets>
+
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false">
+  </a-camera>
+
+  <a-entity mindar-image-target="targetIndex: 0">
+
+    <a-gltf-model
+      src="#model"
+      position="0 0 0"
+      rotation="0 0 0"
+      scale="0.2 0.2 0.2">
+    </a-gltf-model>
+
+  </a-entity>

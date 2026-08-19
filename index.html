@@ -1,141 +1,122 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>QR Code AR Viewer</title>
+<title>QR AR Viewer</title>
 
-  <!-- A-Frame -->
-  https://aframe.io/releases/1.5.0/aframe.min.js</script>
+<script src="https://aframe1.5.0/aframe.min.js
+/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
-  <!-- MindAR for A-Frame -->
-  https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.jsscript>
+<style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: sans-serif;
-      background: #000;
-    }
+#message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: sans-serif;
+  z-index: 9999;
+}
 
-    #message {
-      position: fixed;
-      z-index: 999;
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      padding: 12px;
-      text-align: center;
-      color: white;
-      background: rgba(0, 0, 0, 0.65);
-      border-radius: 8px;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    #startButton {
-      position: fixed;
-      z-index: 1000;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 14px 24px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background: #1976d2;
-      border: none;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    #startButton:active {
-      background: #0d47a1;
-    }
-
-    .example-container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-  </style>
+#startButton {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  background: #1976d2;
+  color: #fff;
+  font-size: 18px;
+  z-index: 9999;
+}
+</style>
 </head>
 
 <body>
 
-  <div id="message">
-    「開始」ボタンを押して、カメラを許可してください。<br>
-    その後、登録したQRコードにカメラを向けてください。
-  </div>
+<div id="message">
+開始ボタンを押してください
+</div>
 
-  <button id="startButton">開始</button>
+<button id="startButton">
+開始
+</button>
 
-  <div class="example-container">
-    <a-scene
-      id="arScene"
-      mindar-image="imageTargetSrc: targets.mind; autoStart: false;"
-      color-space="sRGB"
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-      embedded>
+<a-scene
+id="scene"
+mindar-image="imageTargetSrc: targets.mind;"
+color-space="sRGB"
+renderer="colorManagement: true"
+vr-mode-ui="enabled: false"
+device-orientation-permission-ui="enabled: false"
+embedded
+>
 
-      <a-assets>
-        <a-asset-item
-          id="stampModel"
-          src="stamp05.glb">
-        </a-asset-item>
-      </a-assets>
+<a-assets>
+./sample05.glb
+</a-asset-item>
+</a-assets>
 
-      <a-camera
-        position="0 0 0"
-        look-controls="enabled: false">
-      </a-camera>
+<a-camera
+position="0 0 0"
+look-controls="enabled:false">
+</a-camera>
 
-      <a-entity id="target" mindar-image-target="targetIndex: 0">
+<a-entity mindar-image-target="targetIndex: 0">
 
-        #stampModel
-        </a-gltf-model>
+#model="0 0 0"
+rotation="0 0 0"
+scale="0.3 0.3 0.3">
+</a-gltf-model>
 
-      </a-entity>
+</a-entity>
 
-    </a-scene>
-  </div>
+</a-scene>
 
-  <script>
-    const sceneEl = document.querySelector("#arScene");
-    const targetEl = document.querySelector("#target");
-    const messageEl = document.querySelector("#message");
-    const startButton = document.querySelector("#startButton");
+<script>
+const scene = document.querySelector("#scene");
+const button = document.querySelector("#startButton");
+const message = document.querySelector("#message");
 
-    startButton.addEventListener("click", async () => {
-      const arSystem = sceneEl.systems["mindar-image-system"];
+button.addEventListener("click", async () => {
 
-      try {
-        await arSystem.start();
-        startButton.style.display = "none";
-        messageEl.innerHTML = "QRコードにカメラを向けてください。";
-      } catch (error) {
-        messageEl.innerHTML = "カメラを起動できませんでした。<br>ブラウザのカメラ許可とHTTPS接続を確認してください。";
-        console.error(error);
-      }
-    });
+  try {
 
-    targetEl.addEventListener("targetFound", () => {
-      messageEl.innerHTML = "QRコードを認識しました。";
-      setTimeout(() => {
-        messageEl.style.display = "none";
-      }, 1000);
-    });
+    const arSystem =
+      scene.systems["mindar-image-system"];
 
-    targetEl.addEventListener("targetLost", () => {
-      messageEl.style.display = "block";
-      messageEl.innerHTML = "QRコードを見失いました。もう一度QRコードにカメラを向けてください。";
-    });
-  </script>
+    await arSystem.start();
+
+    button.style.display = "none";
+
+    message.innerHTML =
+      "QRコードにカメラを向けてください";
+
+  } catch(e) {
+
+    console.error(e);
+
+    message.innerHTML =
+      "カメラ起動失敗。ブラウザのカメラ許可を確認してください";
+
+  }
+
+});
+</script>
 
 </body>
 </html>

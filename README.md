@@ -2,7 +2,5 @@
 AR表示する
 ar-3d-viewer/
 ├── index.html
-├── models/
-│ └── sample.glb
-└── images/
-└── thumbnail.png
+├── sample05.glb
+└── targets.mind
